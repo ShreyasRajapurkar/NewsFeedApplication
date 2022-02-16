@@ -15,5 +15,12 @@ class ViewController: UIViewController {
     }
 
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let tabController = UITabBarController()
+        tabController.viewControllers = [FeedViewController(viewModel: FeedViewModel())]
+        tabController.modalPresentationStyle = .fullScreen
+        present(tabController, animated: true, completion: nil)
+    }
 }
 
