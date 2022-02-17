@@ -8,9 +8,11 @@
 import Foundation
 
 class NetworkingClient {
-    public static func fetchNewsFeed(page: Int, completion: @escaping ([NewsArticle]) -> Void) {
+    public static func fetchNewsFeed(page: Int,
+                                     country: String = "in",
+                                     completion: @escaping ([NewsArticle]) -> Void) {
         let pageNumberString = String(page)
-        guard let url = URL(string: "https://newsapi.org/v2/top-headlines?country=in&apiKey=dbb372a6a28d4a44a569002574f8fb2a&page=\(pageNumberString)&pageSize=10") else {
+        guard let url = URL(string: "https://newsapi.org/v2/top-headlines?country=\(country)&apiKey=dbb372a6a28d4a44a569002574f8fb2a&page=\(pageNumberString)&pageSize=10") else {
             return
         }
 

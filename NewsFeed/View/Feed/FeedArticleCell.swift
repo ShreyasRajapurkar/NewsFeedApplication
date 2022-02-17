@@ -8,19 +8,12 @@
 import Foundation
 import UIKit
 
-protocol NewsArticleExpansionProtocol: NSObject {
-    func didTapOnNewsArticleInFeed(cellViewModel: FeedArticleCellViewModel?)
-}
-
 class FeedArticleCell: UITableViewCell {
     let titleLabel = UILabel()
     let descriptionLabel = UILabel()
     var cellViewModel: FeedArticleCellViewModel?
-    let descriptionHeightConstraint: NSLayoutConstraint
-    weak var expansionDelegate: NewsArticleExpansionProtocol?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        descriptionHeightConstraint = descriptionLabel.heightAnchor.constraint(equalToConstant: 0)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupSubviews()
         setupConstraints()
@@ -48,24 +41,15 @@ class FeedArticleCell: UITableViewCell {
         
         constraints.append(descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20))
         constraints.append(descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20))
-        constraints.append(descriptionLabel.topAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 20))
+        constraints.append(descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10))
         constraints.append(descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20))
         NSLayoutConstraint.activate(constraints)
     }
     
-    public func setup(cellViewModel: FeedArticleCellViewModel, expansionDelegate: NewsArticleExpansionProtocol) {
+    public func setup(cellViewModel: FeedArticleCellViewModel) {
         titleLabel.text = cellViewModel.title
         descriptionLabel.text = cellViewModel.description
-        descriptionLabel.isHidden = !cellViewModel.isExpanded
-
-        if !cellViewModel.isExpanded {
-            NSLayoutConstraint.activate([descriptionHeightConstraint])
-        } else {
-            NSLayoutConstraint.deactivate([descriptionHeightConstraint])
-        }
-
         self.cellViewModel = cellViewModel
-        self.expansionDelegate = expansionDelegate
     }
     
     func setupInteractions() {
@@ -74,11 +58,11 @@ class FeedArticleCell: UITableViewCell {
     }
     
     func setupLayout() {
-        titleLabel.numberOfLines = 1
+        titleLabel.numberOfLines = 2
         titleLabel.textColor = UIColor.black
         titleLabel.font = UIFont.systemFont(ofSize: 15)
         
-        descriptionLabel.numberOfLines = 0
+        descriptionLabel.numberOfLines = 5
         descriptionLabel.font = UIFont.systemFont(ofSize: 13)
         descriptionLabel.textColor = UIColor.gray
     }
@@ -89,6 +73,9 @@ class FeedArticleCell: UITableViewCell {
     
     @objc
     func didTapOnNewsArticle() {
-        expansionDelegate?.didTapOnNewsArticleInFeed(cellViewModel: cellViewModel)
+        if let urlString = cellViewModel?.newsURL,
+           let newsURL = URL(string: urlString) {
+            UIApplication.shared.open(newsURL, options: [:], completionHandler: nil)
+        }
     }
 }

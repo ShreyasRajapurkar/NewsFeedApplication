@@ -10,9 +10,11 @@ import Foundation
 class NewsArticle: Decodable {
     let title: String
     let description: String?
+    let url: String
 
-    init(title: String, description: String?) {
+    init(title: String, description: String?, url: String) {
         self.title = title
         self.description = description
+        self.url = url
     }
 }

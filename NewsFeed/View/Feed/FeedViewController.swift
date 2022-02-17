@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewsFeedViewProtocol, NewsArticleExpansionProtocol {
+class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NewsFeedViewProtocol {
     let viewModel: FeedViewModel
     var cellViewModels: [FeedArticleCellViewModel]?
     let tableView = UITableView()
@@ -58,7 +58,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FeedArticleCell", for: indexPath)
         if let cellViewModel = cellViewModels?[indexPath.row] {
-            (cell as? FeedArticleCell)?.setup(cellViewModel: cellViewModel, expansionDelegate: self)
+            (cell as? FeedArticleCell)?.setup(cellViewModel: cellViewModel)
         }
 
         return cell
@@ -69,7 +69,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             return FeedArticleCellViewModel(
                 title: article.title,
                 description: article.description ?? "",
-                isExpanded: false)
+                newsURL: article.url)
         })
 
         DispatchQueue.main.async { [weak self] in
@@ -78,26 +78,14 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     func didTapOnNewsArticleInFeed(cellViewModel: FeedArticleCellViewModel?) {
-        guard let cellViewModel = cellViewModel else {
-            return
-        }
-
-        let index = cellViewModels?.firstIndex(where: { $0.title == cellViewModel.title }) ?? 0
-        guard let oldCellViewModel = cellViewModels?[index] else {
-            return
-        }
-
-        let newCellViewModel = FeedArticleCellViewModel(
-            title: oldCellViewModel.title,
-            description: oldCellViewModel.description,
-            isExpanded: true)
-        cellViewModels?[index] = newCellViewModel
-        tableView.reloadData()
+        
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == cellViewModels!.count - 1 {
             let page = (indexPath.row / 10) + 1
+
+            // Load more call
             viewModel.fetchNewsFeed(page: page)
         }
     }

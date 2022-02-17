@@ -10,11 +10,11 @@ import Foundation
 class FeedArticleCellViewModel {
     let title: String
     let description: String
-    let isExpanded: Bool
+    let newsURL: String
 
-    init(title: String, description: String, isExpanded: Bool) {
+    init(title: String, description: String, newsURL: String) {
         self.title = title
         self.description = description
-        self.isExpanded = isExpanded
+        self.newsURL = newsURL
     }
 }
