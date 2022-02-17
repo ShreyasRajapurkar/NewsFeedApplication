@@ -9,12 +9,10 @@ import Foundation
 
 class NewsArticleCollection: Decodable {
     let status: String
-    let totalResults: Int
     let articles: [NewsArticle]
 
-    init(status: String, totalResults: Int, articles: [NewsArticle]) {
+    init(status: String, articles: [NewsArticle]) {
         self.status = status
-        self.totalResults = totalResults
         self.articles = articles
     }
 }

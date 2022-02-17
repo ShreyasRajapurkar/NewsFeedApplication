@@ -40,26 +40,28 @@ class FeedViewModel {
     }
     
     private func fetchArticles(page: Int) {
-        NetworkingClient.fetchArticles(page: page,
-                                       channel: channel,
-                                       completion: { [weak self] articles in
-            if articles.count == 0 {
-                return
-            }
+        NetworkingClient.fetchArticles(
+            page: page,
+            channel: channel,
+            completion: { [weak self] articles in
+                if articles.count == 0 {
+                    return
+                }
+                
+                let newModels = articles.map { article in
+                    FeedArticleCellViewModel(
+                        itemType: .article,
+                        id: nil,
+                        title: article.title,
+                        description: article.description ?? "",
+                        url: article.url)
+                }
 
-            let newModels = articles.map { article in
-                FeedArticleCellViewModel(
-                    itemType: .article,
-                    id: nil,
-                    title: article.title,
-                    description: article.description ?? "",
-                    url: article.url)
-            }
-            if var existingArticles = self?.feedCellViewModels {
-                self?.feedCellViewModels?.append(contentsOf: newModels)
-            } else {
-                self?.feedCellViewModels = newModels
-            }
+                if var existingArticles = self?.feedCellViewModels {
+                    self?.feedCellViewModels?.append(contentsOf: newModels)
+                } else {
+                    self?.feedCellViewModels = newModels
+                }
         })
     }
     

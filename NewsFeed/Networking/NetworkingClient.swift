@@ -38,7 +38,22 @@ class NetworkingClient {
                                      channel: String? = nil,
                                      completion: @escaping ([NewsArticle]) -> Void) {
         let pageNumberString = String(page)
-        guard let url = URL(string: "https://newsapi.org/v2/top-headlines?country=\(country)&channel=\(channel!)&apiKey=dbb372a6a28d4a44a569002574f8fb2a") else {
+        var queryItems: [URLQueryItem] = []
+//        queryItems.append(URLQueryItem(name: "channel", value: channel))
+        
+        if channel == nil {
+            queryItems.append(URLQueryItem(name: "country", value: country))
+        }
+        queryItems.append(URLQueryItem(name: "apiKey", value: "dbb372a6a28d4a44a569002574f8fb2a"))
+        queryItems.append(URLQueryItem(name: "sources", value: channel))
+        
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "newsapi.org"
+        urlComponents.queryItems = queryItems
+        urlComponents.path = "/v2/top-headlines"
+        
+        guard let url = urlComponents.url else {
             return
         }
 
