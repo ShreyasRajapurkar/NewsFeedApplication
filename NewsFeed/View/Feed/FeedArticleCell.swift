@@ -54,7 +54,7 @@ class FeedArticleCell: UITableViewCell {
     
     func setupInteractions() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOnNewsArticle))
-        contentView.addGestureRecognizer(tapGestureRecognizer)
+//        contentView.addGestureRecognizer(tapGestureRecognizer)
     }
     
     func setupLayout() {
@@ -73,9 +73,6 @@ class FeedArticleCell: UITableViewCell {
     
     @objc
     func didTapOnNewsArticle() {
-        if let urlString = cellViewModel?.newsURL,
-           let newsURL = URL(string: urlString) {
-            UIApplication.shared.open(newsURL, options: [:], completionHandler: nil)
-        }
+//        cellViewModel?.handleTap()
     }
 }

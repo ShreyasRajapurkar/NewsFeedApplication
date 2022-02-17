@@ -12,9 +12,13 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let viewModel: FeedViewModel
     var cellViewModels: [FeedArticleCellViewModel]?
     let tableView = UITableView()
+    let shouldPaginate: Bool
 
     init(viewModel: FeedViewModel) {
         self.viewModel = viewModel
+
+        // Only add pagination for news articles
+        self.shouldPaginate = viewModel.itemType == .article
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -65,13 +69,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     func didFetchNewsFeed() {
-        cellViewModels = viewModel.articles?.map({ article in
-            return FeedArticleCellViewModel(
-                title: article.title,
-                description: article.description ?? "",
-                newsURL: article.url)
-        })
-
+        cellViewModels = viewModel.feedCellViewModels
         DispatchQueue.main.async { [weak self] in
             self?.tableView.reloadData()
         }
@@ -82,11 +80,16 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == cellViewModels!.count - 1 {
+        if indexPath.row == cellViewModels!.count - 1 && shouldPaginate {
             let page = (indexPath.row / 10) + 1
 
             // Load more call
             viewModel.fetchNewsFeed(page: page)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cellViewModel = cellViewModels?[indexPath.row]
+        cellViewModel?.handleTap(navigationController: navigationController!)
     }
 }
