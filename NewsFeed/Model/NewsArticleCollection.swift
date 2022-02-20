@@ -7,7 +7,7 @@
 
 import Foundation
 
-class NewsArticleCollection: Decodable {
+struct NewsArticleCollection: Decodable {
     let status: String
     let articles: [NewsArticle]
 

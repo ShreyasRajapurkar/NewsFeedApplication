@@ -25,30 +25,39 @@ class ViewController: UIViewController {
         // Country feed
         let countryController = setupCountriesView()
         
-        tabController.viewControllers = [newsFeedController, countryController]
+        // Search view
+        let searchViewController = setupSearchView()
+        
+        tabController.viewControllers = [newsFeedController, countryController, searchViewController]
         tabController.modalPresentationStyle = .fullScreen
 
-        var navigationController = UINavigationController(rootViewController: tabController)
+        let navigationController = UINavigationController(rootViewController: tabController)
         navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)
     }
     
     private func setupNewsFeed() -> UIViewController {
         let feedController = FeedViewController(viewModel: FeedViewModel(itemType: .article, channel: nil))
-        feedController.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 0)
+        feedController.tabBarItem = UITabBarItem(title: "Top headlines", image: nil, selectedImage: nil)
         return feedController
     }
     
     private func setupCountriesView() -> UIViewController {
         let countryHeadlinesViewController = FeedViewController(viewModel: FeedViewModel(itemType: .article, channel: nil))
-        countryHeadlinesViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .topRated, tag: 0)
+        countryHeadlinesViewController.tabBarItem = UITabBarItem(title: "Country news", image: nil, selectedImage: nil)
 
         let channelsViewController = FeedViewController(viewModel: FeedViewModel(itemType: .channel, channel: nil))
-        channelsViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 1)
+        channelsViewController.tabBarItem = UITabBarItem(title: "Channels", image: nil, selectedImage: nil)
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [countryHeadlinesViewController, channelsViewController]
-        tabBarController.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 1)
+        tabBarController.tabBarItem = UITabBarItem(title: "Country", image: nil, selectedImage: nil)
         return tabBarController
+    }
+
+    private func setupSearchView() -> UIViewController {
+        let searchViewController = SearchViewController(viewModel: FeedViewModel(itemType: .article, channel: nil))
+        searchViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
+        return searchViewController
     }
 }
 
