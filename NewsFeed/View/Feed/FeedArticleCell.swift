@@ -18,7 +18,6 @@ class FeedArticleCell: UITableViewCell {
         setupSubviews()
         setupConstraints()
         setupLayout()
-        setupInteractions()
     }
     
     required init?(coder: NSCoder) {
@@ -52,11 +51,6 @@ class FeedArticleCell: UITableViewCell {
         self.cellViewModel = cellViewModel
     }
     
-    func setupInteractions() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOnNewsArticle))
-//        contentView.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
     func setupLayout() {
         titleLabel.numberOfLines = 2
         titleLabel.textColor = UIColor.black
@@ -69,10 +63,5 @@ class FeedArticleCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-    }
-    
-    @objc
-    func didTapOnNewsArticle() {
-//        cellViewModel?.handleTap()
     }
 }
